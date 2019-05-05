@@ -27,7 +27,7 @@ initialize();
 animate();
 
 function initialize()
-æ
+{
 	scene = new THREE.Scene();
 
 	let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.5 );
@@ -36,10 +36,10 @@ function initialize()
 	camera = new THREE.Camera();
 	scene.add(camera);
 
-	renderer = new THREE.WebGLRenderer(æ
+	renderer = new THREE.WebGLRenderer({
 		antialias : true,
 		alpha: true
-	å);
+	});
 	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
 	renderer.setSize( 640, 480 );
 	renderer.domElement.style.position = 'absolute'
@@ -55,43 +55,43 @@ function initialize()
 	// setup arToolkitSource
 	////////////////////////////////////////////////////////////
 
-	arToolkitSource = new THREEx.ArToolkitSource(æ
+	arToolkitSource = new THREEx.ArToolkitSource({
 		sourceType : 'webcam',
-	å);
+	});
 
 	function onResize()
-	æ
+	{
 		arToolkitSource.onResize()	
 		arToolkitSource.copySizeTo(renderer.domElement)	
 		if ( arToolkitContext.arController !== null )
-		æ
+		{
 			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
-		å	
-	å
+		}	
+	}
 
-	arToolkitSource.init(function onReady()æ
+	arToolkitSource.init(function onReady(){
 		onResize()
-	å);
+	});
 	
 	// handle resize event
-	window.addEventListener('resize', function()æ
+	window.addEventListener('resize', function(){
 		onResize()
-	å);
+	});
 	
 	////////////////////////////////////////////////////////////
 	// setup arToolkitContext
 	////////////////////////////////////////////////////////////	
 
 	// create atToolkitContext
-	arToolkitContext = new THREEx.ArToolkitContext(æ
+	arToolkitContext = new THREEx.ArToolkitContext({
 		cameraParametersUrl: 'data/camera_para.dat',
 		detectionMode: 'mono'
-	å);
+	});
 	
 	// copy projection matrix to camera when initialization complete
-	arToolkitContext.init( function onCompleted()æ
+	arToolkitContext.init( function onCompleted(){
 		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
-	å);
+	});
 
 	////////////////////////////////////////////////////////////
 	// setup markerRoots
@@ -100,46 +100,46 @@ function initialize()
 	// build markerControls
 	markerRoot1 = new THREE.Group();
 	scene.add(markerRoot1);
-	let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, æ
+	let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
 		type: 'pattern', patternUrl: "data/ci.patt",
-	å)
+	})
 
 	let geometry1	= new THREE.CubeGeometry(1,1,1);
-	let material1	= new THREE.MeshNormalMaterial(æ
+	let material1	= new THREE.MeshNormalMaterial({
 		transparent: true,
 		opacity: 0.5,
 		side: THREE.DoubleSide
-	å); 
+	}); 
 	
 	mesh1 = new THREE.Mesh( geometry1, material1 );
 	mesh1.position.y = 0.5;
 	
 	markerRoot1.add( mesh1 );
-å
+}
 
 
 function update()
-æ
+{
 	// update artoolkit on every frame
 	if ( arToolkitSource.ready !== false )
 		arToolkitContext.update( arToolkitSource.domElement );
-å
+}
 
 
 function render()
-æ
+{
 	renderer.render( scene, camera );
-å
+}
 
 
 function animate()
-æ
+{
 	requestAnimationFrame(animate);
 	deltaTime = clock.getDelta();
 	totalTime += deltaTime;
 	update();
 	render();
-å
+}
 
 </script>
 
